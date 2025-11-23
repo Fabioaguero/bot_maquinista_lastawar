@@ -1,4 +1,16 @@
 const venom = require('venom-bot');
+const express = require('express');
+
+const app = express();
+
+// Rota de status para manter o serviço ativo
+app.get('/status', (req, res) => {
+  res.send('Bot ativo 🚂');
+});
+
+// Render exige que o servidor escute em uma porta definida pela variável de ambiente PORT
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
 
 // Lista de maquinistas com nome e número
 const maquinistas = [
@@ -28,16 +40,15 @@ function start(client) {
     return null;
   }
 
-  // Checa a cada minuto se é 10h30
   setInterval(() => {
     const agora = new Date();
     if (agora.getHours() === 10 && agora.getMinutes() === 30) {
       const maquinista = getMaquinista();
       if (maquinista) {
         client.sendMentioned(
-          "120363403242708304@g.us", // coloque o ID do grupo aqui
+          "120363403242708304@g.us", // substitua pelo ID real do grupo
           `🚂 O maquinista de hoje é: @${maquinista.numero.split('@')[0]}`,
-          [maquinista.numero] // menção ao número
+          [maquinista.numero]
         );
       }
     }
